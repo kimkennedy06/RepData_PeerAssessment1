@@ -86,6 +86,69 @@ max.avgSteps.interval <- data.summary2[which.max(data.summary2$avg), 1]
 Therefore the 5-minute interval with the maximum number of steps is 835.
 
 ## Inputing missing values
+Going back to the original dataset created in the section **Loading and Preprocessing the Data**, we want to create a full data set by replacing the `NAs` with values instead of ignoring the values in calculations.  
+
+In order to do that we first need to know how many values are `NA`. We can find this out with the following code:
+
+```r
+number.NAs <- sum(is.na(data$steps))
+```
+
+The total number of missing values in the dataset is 2304.  
+
+In order to fill the missing values in the dataset, I am going to replace the NAs with their avg steps across all days for their corresponding interval (i.e. Use avg values found in previous section to replace `NAs` for that interval).
+
+```r
+new.data <- data
+for (x in data.summary2$interval) {
+    new.data$steps[is.na(new.data$steps) & new.data$interval == x] <- data.summary2$avg[data.summary2$interval == 
+        x]
+}
+```
+
+
+I am going to summarize `new.data` by `date` and keep track of the total number of steps per day.
+
+```r
+library(plyr)
+new.data.summary <- ddply(new.data, ~date, summarize, total = sum(steps, na.rm = TRUE))
+```
+
+Below is the code and the histogram to display the total number of steps taken per day.
+
+```r
+with(new.data.summary, hist(total, breaks = 10, xlab = "Total Number of Steps", 
+    main = "Histogram of Total Number of Steps"))
+```
+
+![plot of chunk steps.histogram2](figure/steps_histogram2.png) 
+
+Now that we have a rough idea  of the number of steps taken per day visually, I am going to calculate the mean and median total number of steps taken per day.  
+
+**Mean total number of steps**  
+Here is the mean total number of steps taken per day:
+
+```r
+mean.total.steps <- mean(new.data.summary$total)
+print(mean.total.steps)
+```
+
+```
+## [1] 10766
+```
+
+
+**Median total number of steps**  
+Here is the median total number of steps taken per day:
+
+```r
+median.total.steps <- median(new.data.summary$total)
+print(median.total.steps)
+```
+
+```
+## [1] 10766
+```
 
 
 

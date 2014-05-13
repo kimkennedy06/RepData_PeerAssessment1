@@ -56,7 +56,46 @@ max.avgSteps.interval <- data.summary2[which.max(data.summary2$avg),1]
 Therefore the 5-minute interval with the maximum number of steps is `r max.avgSteps.interval`.
 
 ## Inputing missing values
+Going back to the original dataset created in the section **Loading and Preprocessing the Data**, we want to create a full data set by replacing the `NAs` with values instead of ignoring the values in calculations.  
 
+In order to do that we first need to know how many values are `NA`. We can find this out with the following code:
+```{r number.NAs}
+number.NAs <- sum(is.na(data$steps))
+```
+The total number of missing values in the dataset is `r number.NAs`.  
+
+In order to fill the missing values in the dataset, I am going to replace the NAs with their avg steps across all days for their corresponding interval (i.e. Use avg values found in previous section to replace `NAs` for that interval).
+```{r replace.NAs}
+new.data <- data
+for(x in data.summary2$interval){
+  new.data$steps[is.na(new.data$steps) & new.data$interval==x] <- data.summary2$avg[data.summary2$interval==x]
+}
+```
+
+I am going to summarize `new.data` by `date` and keep track of the total number of steps per day.
+```{r summarize.data.date.steps2}
+library(plyr)
+new.data.summary <- ddply(new.data,~date,summarize,total=sum(steps,na.rm=TRUE))
+```
+Below is the code and the histogram to display the total number of steps taken per day.
+```{r steps.histogram2}
+with(new.data.summary, hist(total,breaks=10,xlab="Total Number of Steps",main="Histogram of Total Number of Steps"))
+```
+Now that we have a rough idea  of the number of steps taken per day visually, I am going to calculate the mean and median total number of steps taken per day.  
+
+**Mean total number of steps**  
+Here is the mean total number of steps taken per day:
+```{r mean.total.steps2}
+mean.total.steps <- mean(new.data.summary$total)
+print(mean.total.steps)
+```
+
+**Median total number of steps**  
+Here is the median total number of steps taken per day:
+```{r median.total.steps2}
+median.total.steps <- median(new.data.summary$total)
+print(median.total.steps)
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
