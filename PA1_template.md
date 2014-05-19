@@ -2,8 +2,8 @@ Reproducible Research: Peer Assessment 1
 ========================================
 
 
-## Loading and Preprocessing the Data
-After downloading the **Activity monitoring data** from the course website, we will have a zip called `repdata-data-activity.zip`. After the download is complete, move and extract the .zip file to your working directory for R. Once you have done that we can start loading and preprocessing the data.  
+## Loading and Pre-processing the Data
+After downloading the **Activity monitoring data** from the course website, we will have a zip called `repdata-data-activity.zip`. After the download is complete, move and extract the .zip file to your working directory for R. Once you have done that we can start loading and pre-processing the data.  
 
 In order to load the data `activity.csv`, I am going to read in the data using read.csv(). Once I have read the data into a variable called `activity.data`, I am going to convert the `date` factor of `activity.data` into a Date-time class.
 
@@ -49,8 +49,12 @@ head(activity.data.summary)
 Below is the code and the histogram to display the total number of steps taken per day.
 
 ```r
-with(activity.data.summary, hist(total, breaks = 10, xlab = "Total Number of Steps", 
-    main = "Histogram of Total Number of Steps"))
+# with(activity.data.summary, hist(total,breaks=10,xlab='Total Number of
+# Steps',main='Histogram of Total Number of Steps'))
+
+with(activity.data.summary, plot(as.Date(date), total, xlab = "Date", type = "h", 
+    ylab = "Steps", main = "Histogram of Total Number of Steps", lwd = 5, lty = 1, 
+    lend = "square"))
 ```
 
 ![plot of chunk steps.histogram](figure/steps_histogram.png) 
@@ -103,7 +107,7 @@ with(activity.data.summary2, plot(interval, avg, xlab = "Interval", ylab = "Aver
 
 ![plot of chunk plot.interval.avgsteps](figure/plot_interval_avgsteps.png) 
 
-The 5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps can be found with the following code:
+The 5-minute interval, on average across all the days in the data set, that contains the maximum number of steps can be found with the following code:
 
 ```r
 max.avgSteps.interval <- activity.data.summary2[which.max(activity.data.summary2$avg), 
@@ -113,7 +117,7 @@ max.avgSteps.interval <- activity.data.summary2[which.max(activity.data.summary2
 Therefore the 5-minute interval with the maximum number of steps is **835**.
 
 ## Inputing missing values
-Going back to the original dataset created in the section **Loading and Preprocessing the Data**, we want to create a full data set by replacing the non-available data, `NAs`, with values instead of ignoring the values in calculations.  
+Going back to the original data set created in the section **Loading and Preprocessing the Data**, we want to create a full data set by replacing the non-available data, `NAs`, with values instead of ignoring the values in calculations.  
 
 In order to do that we first need to know how many values are `NA`. We can find this out with the following code:
 
@@ -121,9 +125,9 @@ In order to do that we first need to know how many values are `NA`. We can find 
 number.NAs <- sum(is.na(activity.data$steps))
 ```
 
-The total number of missing values in the dataset is **2304**.  
+The total number of missing values in the data set is **2304**.  
 
-In order to fill the missing values in the dataset, I am going to replace the NAs with their avg steps across all days for their corresponding interval (i.e. Use avg values found in previous section to replace `NAs` for that interval).
+In order to fill the missing values in the data set, I am going to replace the NAs with their avg steps across all days for their corresponding interval (i.e. Use avg values found in previous section to replace `NAs` for that interval).
 
 ```r
 new.activity.data <- activity.data
@@ -202,7 +206,7 @@ difference.between.median <- abs((median.total.steps - median.total.steps2))
 
 The difference between means is **1411.9592** and the difference between medians is **371.1887**.  
   
-Below is the calculaitons for finding the percent difference between the means and medians.
+Below is the calculations for finding the percent difference between the means and medians.
 
 ```r
 percent.difference.mean <- ((mean.total.steps2/mean.total.steps) - 1) * 100

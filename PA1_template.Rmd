@@ -23,7 +23,7 @@ head(activity.data.summary)
 ```
 Below is the code and the histogram to display the total number of steps taken per day.
 ```{r steps.histogram}
-with(activity.data.summary, hist(total,breaks=10,xlab="Total Number of Steps",main="Histogram of Total Number of Steps"))
+with(activity.data.summary, plot(as.Date(date),total,xlab="Date",type="h",ylab="Steps",main="Histogram of Total Number of Steps",lwd=5,lty=1,lend="square"))
 ```
 Now that we have a rough idea  of the number of steps taken per day visually, I am going to calculate the mean and median total number of steps taken per day.  
 

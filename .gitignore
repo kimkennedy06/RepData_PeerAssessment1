@@ -10,3 +10,5 @@ activity.csv
 *.rdx
 
 cache/__packages
+
+figure/load_data.png
